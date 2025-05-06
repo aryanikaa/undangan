@@ -1,122 +1,348 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Undangan Iskandar & Pasangan</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Undangan Pernikahan</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+    html { scroll-behavior: smooth; }
+    body { margin:0; font-family:'Poppins',sans-serif; background: linear-gradient(to bottom, #eafaf1, #f7f1e5); color:#333; }
+    nav { position:fixed; top:0; width:100%; background:#2d6a4f; padding:10px; z-index:1000; display:flex; justify-content:center; gap:15px; box-shadow:0 2px 5px rgba(0,0,0,0.2); }
+    nav a { color:white; text-decoration:none; font-weight:bold; }
+    nav button { 
+      color:white; text-decoration:none; font-weight:bold; background:transparent; border:none; cursor:pointer; 
+      padding: 0 8px;
     }
-    body, html {
-      height: 100%;
-      overflow: hidden;
-    }
-    .background {
-      background: url('Gambar5.jpg') no-repeat center center/cover;
-      height: 100%;
-      width: 100%;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    .section { padding:100px 20px 60px; max-width:800px; margin:0 auto; text-align:center; }
+    h1 { color:#1b4332; }
+    h2 { color:#2d6a4f; }
+    blockquote { font-style:italic; color:#555; background:#fff; padding:15px; margin:20px auto; border-left:5px solid #ffd166; border-radius:5px; max-width:600px; }
+    #countdown { font-size:24px; color:#40798c; margin:20px 0; }
+    .rsvp-form { background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); max-width:500px; margin:40px auto; text-align:left; }
+    .rsvp-form label { display:block; margin:10px 0 5px; font-weight:bold; }
+    .rsvp-form input[type="text"], .rsvp-form select { width:100%; padding:8px; border:1px solid #ccc; border-radius:5px; }
+    .rsvp-form button { margin-top:15px; padding:10px 20px; background:#ffd166; color:#2d6a4f; border:none; border-radius:25px; font-weight:bold; cursor:pointer; }
+    .rsvp-form button:hover { background:#ffba08; }
+    #playButton { position:fixed; top:70px; right:20px; background:#ffd166; color:#2d6a4f; padding:8px 15px; border:none; border-radius:20px; cursor:pointer; display:none; z-index:1001; }
+    .modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; justify-content:center; align-items:center; z-index:2000; }
+    .modal-content { background:white; padding:30px; border-radius:10px; text-align:center; position:relative; }
+    .close-btn { position:absolute; top:10px; right:15px; cursor:pointer; color:#2d6a4f; font-size:24px; }
+    .petal { position:absolute; width:20px; height:20px; background:url('https://i.postimg.cc/fR2cfbr7/flower.png') no-repeat center/contain; animation:fall linear infinite; pointer-events:none; }
+    @keyframes fall { 0%{transform:translateY(-100px) rotate(0deg);} 100%{transform:translateY(100vh) rotate(360deg);} }
+
+    /* Container tombol beri ucapan */
+    #ucapanContainer {
+      max-width: 500px;
+      margin: 20px auto 40px;
       text-align: center;
+      display: block; /* langsung tampil */
+    }
+    #ucapanContainer button {
+      background: #2d6a4f;
       color: white;
-      background-size: cover;
-    }
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.5);
-    }
-    .content {
-      position: relative;
-      z-index: 2;
-      padding: 20px;
-    }
-    .content h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-      animation: fadeInDown 1s ease-out;
-    }
-    .content h2 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      animation: fadeInDown 1.5s ease-out;
-    }
-    .content p {
-      margin-bottom: 40px;
-      font-size: 1rem;
-      animation: fadeIn 2s ease-out;
-    }
-    .envelope-button {
-      background: white;
-      color: #2d6a4f;
-      padding: 15px 30px;
       border: none;
-      border-radius: 50px;
-      font-size: 1rem;
+      border-radius: 8px;
+      padding: 10px 20px;
       font-weight: bold;
       cursor: pointer;
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      animation: pulse 2s infinite;
-      transition: background 0.3s;
+      margin: 10px 15px;
+      transition: background 0.3s ease;
     }
-    .envelope-button:hover {
-      background: #ffd166;
+    #ucapanContainer button:hover {
+      background: #3c8a66;
+    }
+    /* Container untuk daftar ucapan */
+    #daftarUcapan {
+      background: #fff;
+      max-width: 500px;
+      margin: 20px auto 60px;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: none; /* tetap disembunyikan sampai ada ucapan */
+    }
+    #daftarUcapan h3 {
+      margin-top: 0;
       color: #2d6a4f;
+      text-align: center;
     }
-    .envelope-icon {
-      width: 24px;
-      height: 24px;
+    #daftarUcapan .ucapan-item {
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+    #daftarUcapan .ucapan-item:last-child {
+      border-bottom: none;
+    }
+    #daftarUcapan .ucapan-nama {
+      font-weight: bold;
+      color: #1b4332;
+    }
+    #daftarUcapan .ucapan-teks {
+      margin-left: 10px;
+      font-style: italic;
+      color: #555;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    /* Container info berikan kado */
+    #infoKado {
+      max-width: 500px;
+      margin: 0 auto 80px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      color: #2d6a4f;
+      font-weight: 600;
+      line-height: 1.5;
+      text-align: left;
+      display: block; /* langsung tampil */
     }
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
+    #infoKado h3 {
+      text-align: center;
+      margin-bottom: 15px;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    #infoKado p {
+      margin: 6px 0;
+    }
+    #infoKado .rekening {
+      background: #d8f3dc;
+      padding: 12px 15px;
+      border-radius: 8px;
+      font-weight: 700;
+      color: #1b4332;
+      margin-top: 10px;
+      user-select: all; /* biar gampang copy */
     }
   </style>
 </head>
 <body>
+<audio id="backgroundAudio" loop>
+  <source src="Gamon.mp3" type="audio/mpeg" />
+  Browser Anda tidak mendukung elemen audio.
+</audio>
+<button id="playButton" onclick="playAudio()">Putar Musik</button>
+<nav>
+  <a href="#home">Beranda</a>
+  <a href="#acara">Acara</a>
+  <a href="#galeri">Galeri</a>
+  <a href="#rsvp">RSVP</a>
+</nav>
 
-<div class="background">
-  <div class="overlay"></div>
-  <div class="content">
-    <h1>Iskandar & Pasangan</h1>
-    <h2>20 Mei 2025</h2>
-    <p>Dar Iskandar & Pasangan</p>
-    <button class="envelope-button" onclick="openInvitation()">
-      <img src="https://cdn-icons-png.flaticon.com/512/2099/2099180.png" alt="Envelope" class="envelope-icon">
-      Open Invitation
-    </button>
+<div id="home" class="section">
+  <h1>Undangan Pernikahan</h1>
+  <div id="countdown">Menghitung mundur...</div>
+  <p>Dengan bahagia kami mengundang Anda ke pernikahan kami</p>
+  <img src="gambar4.jpg" alt="Pengantin" style="width:150px;height:150px;border-radius:50%;margin:20px 0;box-shadow:0 4px 10px rgba(0,0,0,0.1);" />
+  <h2>Andi Ramadhan & Sinta Ayu Lestari</h2>
+  <p>Sabtu, 10 Mei 2025 | Gedung Serbaguna Bahagia</p>
+  <blockquote>
+    “Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan-pasangan untukmu.”
+    <br /><small>- QS. Ar-Rum: 21</small>
+  </blockquote>
+</div>
+
+<div id="acara" class="section" style="background:#f0f9f4;">
+  <h1>Detail Acara</h1>
+  <h2>Andi Ramadhan</h2>
+  <p>Putra dari Bapak Suhardi & Ibu Nuraini</p>
+  <h2>Sinta Ayu Lestari</h2>
+  <p>Putri dari Bapak Sutrisno & Ibu Dwi Ratna</p>
+  <hr />
+  <p><strong>Akad Nikah:</strong><br />10 Mei 2025, Pukul 10.00 WIB</p>
+  <p><strong>Resepsi:</strong><br />11.30 WIB - Selesai</p>
+  <p>Lokasi: Gedung Serbaguna Bahagia, Jalan Mawar No. 12, Kota Bahagia</p>
+</div>
+
+<div id="galeri" class="section">
+  <h1>Galeri</h1>
+  <img src="gambar1.jpg" alt="Foto 1" style="width:100%; max-width:400px; margin:10px 0; border-radius:10px;" />
+  <img src="gambar2.jpg" alt="Foto 2" style="width:100%; max-width:400px; margin:10px 0; border-radius:10px;" />
+  <img src="gambar3.jpg" alt="Foto 3" style="width:100%; max-width:400px; margin:10px 0; border-radius:10px;" />
+</div>
+
+<div id="rsvp" class="section">
+  <h1>Konfirmasi Kehadiran (RSVP)</h1>
+  <form class="rsvp-form" onsubmit="submitRSVP(event)">
+    <label for="nama">Nama Lengkap</label>
+    <input type="text" id="nama" name="nama" required />
+    <label for="kehadiran">Kehadiran</label>
+    <select id="kehadiran" name="kehadiran" required>
+      <option value="">Pilih</option>
+      <option value="Hadir">Hadir</option>
+      <option value="Tidak Hadir">Tidak Hadir</option>
+    </select>
+    <button type="submit">Kirim</button>
+  </form>
+</div>
+
+<!-- Tombol dan Daftar Ucapan -->
+<div id="ucapanContainer">
+  <button onclick="toggleUcapan()">Berikan Ucapan</button>
+</div>
+<div id="daftarUcapan">
+  <h3>Daftar Ucapan</h3>
+  <div id="listUcapan"></div>
+</div>
+
+<!-- Info Rekening Kado -->
+<div id="infoKado">
+  <h3>Informasi Pemberian Kado</h3>
+  <p>Jika ingin memberikan kado, dapat melalui transfer rekening berikut:</p>
+  <p class="rekening">BNI 1234567890 a.n. Andi & Sinta</p>
+</div>
+
+<!-- Elemen Trigger untuk Autoplay Musik -->
+<div id="audioTrigger" style="position:fixed; top:50px; left:50%; width:1px; height:1px; pointer-events:none; opacity:0; z-index:9999;"></div>
+
+<!-- Modal Ucapan -->
+<div id="modalUcapan" class="modal" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close-btn" onclick="closeModal()">×</span>
+    <h2>Berikan Ucapan</h2>
+    <form id="formUcapan" onsubmit="submitUcapan(event)">
+      <label for="namaUcapan">Nama</label>
+      <input type="text" id="namaUcapan" name="namaUcapan" required />
+      <label for="teksUcapan">Ucapan</label>
+      <textarea id="teksUcapan" name="teksUcapan" rows="4" required></textarea>
+      <button type="submit">Kirim Ucapan</button>
+    </form>
   </div>
 </div>
 
 <script>
-  function openInvitation() {
-    window.location.href = "undang.html"; // Pindah ke undangan utama
-  }
-</script>
+  // Musik
+  const audio = document.getElementById('backgroundAudio');
+  const playBtn = document.getElementById('playButton');
+  const audioTrigger = document.getElementById('audioTrigger');
 
+  // Tombol play manual
+  function playAudio() {
+    if(audio.paused){
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+
+  // Update tombol play/pause otomatis saat audio play/pause
+  audio.addEventListener('play', () => playBtn.style.display = 'none');
+  audio.addEventListener('pause', () => playBtn.style.display = 'inline-block');
+
+  // Intersection Observer untuk autoplay saat scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        if(audio.paused){
+          audio.play().catch(() => {
+            playBtn.style.display = 'inline-block';
+          });
+        }
+      } else {
+        if(!audio.paused){
+          audio.pause();
+        }
+      }
+    });
+  }, { threshold: 0.5 });
+  observer.observe(audioTrigger);
+
+  // Countdown Timer
+  const countdownEl = document.getElementById('countdown');
+  const eventDate = new Date('May 10, 2025 10:00:00').getTime();
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = eventDate - now;
+
+    if(distance < 0) {
+      countdownEl.innerHTML = "Acara sudah berlangsung!";
+      clearInterval(interval);
+      return;
+    }
+
+    const days = Math.floor(distance/(1000*60*60*24));
+    const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+    const seconds = Math.floor((distance%(1000*60))/1000);
+
+    countdownEl.innerHTML = `${days} Hari ${hours} Jam ${minutes} Menit ${seconds} Detik`;
+  }
+
+  updateCountdown();
+  const interval = setInterval(updateCountdown, 1000);
+
+  // RSVP form submit
+  function submitRSVP(e) {
+    e.preventDefault();
+    const nama = document.getElementById('nama').value.trim();
+    const kehadiran = document.getElementById('kehadiran').value;
+
+    if(!nama || !kehadiran) {
+      alert('Mohon isi semua data!');
+      return;
+    }
+
+    alert(`Terima kasih, ${nama}. Konfirmasi kehadiran Anda: ${kehadiran}`);
+    e.target.reset();
+  }
+
+  // Ucapan modal
+  const modal = document.getElementById('modalUcapan');
+  function toggleUcapan() {
+    modal.style.display = 'flex';
+  }
+  function closeModal(e) {
+    if(!e || e.target === modal || e.target.classList.contains('close-btn')){
+      modal.style.display = 'none';
+    }
+  }
+
+  // Simpan ucapan di LocalStorage (bisa ganti dengan database)
+  function submitUcapan(e) {
+    e.preventDefault();
+    const nama = document.getElementById('namaUcapan').value.trim();
+    const teks = document.getElementById('teksUcapan').value.trim();
+
+    if(!nama || !teks) {
+      alert('Mohon isi semua data ucapan!');
+      return;
+    }
+
+    const ucapanList = JSON.parse(localStorage.getItem('ucapanList') || '[]');
+    ucapanList.push({nama, teks});
+    localStorage.setItem('ucapanList', JSON.stringify(ucapanList));
+
+    renderUcapan();
+    closeModal();
+    e.target.reset();
+  }
+
+  function renderUcapan() {
+    const listContainer = document.getElementById('listUcapan');
+    const daftarUcapan = document.getElementById('daftarUcapan');
+    const ucapanList = JSON.parse(localStorage.getItem('ucapanList') || '[]');
+
+    if(ucapanList.length === 0) {
+      daftarUcapan.style.display = 'none';
+      return;
+    }
+
+    daftarUcapan.style.display = 'block';
+    listContainer.innerHTML = '';
+    ucapanList.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('ucapan-item');
+      div.innerHTML = `<span class="ucapan-nama">${item.nama}:</span> <span class="ucapan-teks">"${item.teks}"</span>`;
+      listContainer.appendChild(div);
+    });
+  }
+
+  // Render saat load halaman
+  renderUcapan();
+</script>
 </body>
 </html>
