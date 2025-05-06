@@ -343,40 +343,47 @@ Jl.pelopor , puncak (kompleks Telkom lama) </p>
 
 <script>
   // Musik
-  const audio = document.getElementById('backgroundAudio');
-  const playBtn = document.getElementById('playButton');
-  const audioTrigger = document.getElementById('audioTrigger');
+const audio = document.getElementById("backgroundAudio");
+const playBtn = document.getElementById("playButton");  // Tombol play
+const audioTrigger = document.getElementById("audioTrigger");  // Elemen yang memicu autoplay
 
-  // Tombol play manual
-  function playAudio() {
-    if(audio.paused){
-      audio.play();
-    } else {
-      audio.pause();
-    }
-  }
+// Tombol play manual
+function playAudio() {
+  audio.play().then(() => {
+    playBtn.style.display = "none";  // Sembunyikan tombol play setelah audio diputar
+  }).catch((e) => {
+    console.log("Autoplay gagal:", e);
+    playBtn.style.display = "block";  // Tampilkan tombol play jika autoplay gagal
+  });
+}
 
-  // Update tombol play/pause otomatis saat audio play/pause
-  audio.addEventListener('play', () => playBtn.style.display = 'none');
-  audio.addEventListener('pause', () => playBtn.style.display = 'inline-block');
+// Update tombol play/pause otomatis saat audio play/pause
+audio.addEventListener('play', () => playBtn.style.display = 'none');
+audio.addEventListener('pause', () => playBtn.style.display = 'inline-block');
 
-  // Intersection Observer untuk autoplay saat scroll
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        if(audio.paused){
-          audio.play().catch(() => {
-            playBtn.style.display = 'inline-block';
-          });
-        }
-      } else {
-        if(!audio.paused){
-          audio.pause();
-        }
+// Intersection Observer untuk autoplay saat scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Jika audio tidak diputar dan elemen terlihat, coba putar audio
+      if (audio.paused) {
+        audio.play().catch(() => {
+          playBtn.style.display = 'inline-block';  // Tampilkan tombol play jika autoplay gagal
+        });
       }
-    });
-  }, { threshold: 0.5 });
-  observer.observe(audioTrigger);
+    } else {
+      // Jika audio sedang diputar dan elemen keluar layar, stop audio
+      if (!audio.paused) {
+        audio.pause();
+      }
+    }
+  });
+}, { threshold: 0.5 }); // Menentukan sejauh mana elemen terlihat sebelum dipicu (50%)
+
+observer.observe(audioTrigger);  // Mulai observer pada elemen audioTrigger
+
+// Jika tombol play ditekan secara manual, panggil fungsi playAudio
+playBtn.addEventListener('click', playAudio);
 
   // Countdown Timer
   const countdownEl = document.getElementById('countdown');
