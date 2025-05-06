@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generator Link Undangan</title>
+  <style>
+    /* Reset dan dasar */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px 25px;
+      background: #f9fafb;
+      color: #333;
+      line-height: 1.6;
+      user-select: none;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #1b4332;
+      font-weight: 700;
+      font-size: 2rem;
+      user-select: text;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      color: #344e41;
+      user-select: text;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      border: 1.8px solid #a7c957;
+      background-color: #e9f5db;
+      color: #2f4f4f;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      resize: vertical;
+      min-height: 140px;
+      user-select: text;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #609966;
+      box-shadow: 0 0 8px #a7c957aa;
+      outline: none;
+      background-color: #f0fae9;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #609966;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 5px 10px #3c8a66cc;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    button:hover,
+    button:focus {
+      background: #497b4f;
+      box-shadow: 0 7px 15px #365e3fcc;
+      outline: none;
+    }
+
+    .output {
+      margin-top: 25px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(166, 209, 154, 0.4);
+      font-family: 'Courier New', Courier, monospace;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+      color: #2f4f4f;
+      user-select: text;
+    }
+
+    /* Scrollbar styling for modern browsers */
+    .output::-webkit-scrollbar {
+      width: 8px;
+    }
+    .output::-webkit-scrollbar-thumb {
+      background-color: #a7c957cc;
+      border-radius: 10px;
+    }
+    .output::-webkit-scrollbar-track {
+      background: #e9f5db;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Generator Link Undangan</h2>
+  <label for="baseUrl">Masukkan URL dasar undangan (misal: https://namadomainkamu.com/splash.html)</label>
+  <input type="text" id="baseUrl" placeholder="https://namadomainkamu.com/splash.html" autocomplete="off" />
+
+  <label for="namaList">Masukkan daftar nama tamu, satu nama per baris:</label>
+  <textarea id="namaList" placeholder="Pak Budi&#10;Ibu Siti&#10;Keluarga Andi"></textarea>
+
+  <button onclick="generateLinks()">Generate Links</button>
+
+  <div class="output" id="output" style="display:none;"></div>
+
+  <script>
+    function encodeName(name) {
+      // Encode spasi dan karakter khusus agar aman di URL
+      return encodeURIComponent(name.trim());
+    }
+
+    function generateLinks() {
+      const baseUrl = document.getElementById('baseUrl').value.trim();
+      const namesText = document.getElementById('namaList').value.trim();
+      const outputDiv = document.getElementById('output');
+
+      if (!baseUrl) {
+        alert('Masukkan URL dasar undangan terlebih dahulu!');
+        return;
+      }
+      if (!namesText) {
+        alert('Masukkan daftar nama tamu terlebih dahulu!');
+        return;
+      }
+
+      const names = namesText.split('\n').filter(n => n.trim() !== '');
+      if (names.length === 0) {
+        alert('Daftar nama tidak boleh kosong!');
+        return;
+      }
+
+      let result = '';
+      names.forEach(name => {
+        const url = `${baseUrl}?nama=${encodeName(name)}`;
+        result += `${url}\n`;
+      });
+
+      outputDiv.style.display = 'block';
+      outputDiv.textContent = result;
+    }
+  </script>
+
+</body>
+</html>
