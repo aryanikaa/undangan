@@ -30,62 +30,175 @@
     .petal { position:absolute; width:20px; height:20px; background:url('https://i.postimg.cc/fR2cfbr7/flower.png') no-repeat center/contain; animation:fall linear infinite; pointer-events:none; }
     @keyframes fall { 0%{transform:translateY(-100px) rotate(0deg);} 100%{transform:translateY(100vh) rotate(360deg);} }
 
-    /* Container tombol beri ucapan */
-    #ucapanContainer {
-      max-width: 500px;
-      margin: 20px auto 40px;
-      text-align: center;
-      display: block; /* langsung tampil */
-    }
-    #ucapanContainer button {
-      background: #2d6a4f;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 10px 15px;
-      transition: background 0.3s ease;
-    }
-    #ucapanContainer button:hover {
-      background: #3c8a66;
-    }
-    /* Container untuk daftar ucapan */
-    #daftarUcapan {
-      background: #fff;
-      max-width: 500px;
-      margin: 20px auto 60px;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: left;
-      max-height: 300px;
-      overflow-y: auto;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: none; /* tetap disembunyikan sampai ada ucapan */
-    }
-    #daftarUcapan h3 {
-      margin-top: 0;
-      color: #2d6a4f;
-      text-align: center;
-    }
-    #daftarUcapan .ucapan-item {
-      border-bottom: 1px solid #ddd;
-      padding: 8px 0;
-    }
-    #daftarUcapan .ucapan-item:last-child {
-      border-bottom: none;
-    }
-    #daftarUcapan .ucapan-nama {
-      font-weight: bold;
-      color: #1b4332;
-    }
-    #daftarUcapan .ucapan-teks {
-      margin-left: 10px;
-      font-style: italic;
-      color: #555;
-    }
+    /* === Tombol "Beri Ucapan" === */
+#ucapanContainer {
+  max-width: 500px;
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#ucapanContainer button {
+  background: #2d6a4f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  min-width: 150px;
+}
+
+#ucapanContainer button:hover {
+  background: #3c8a66;
+}
+
+/* === Modal Overlay === */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.submit-btn {
+  background: #2d6a4f;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background: #3c8a66;
+}
+
+
+/* === Form di dalam Modal === */
+#formUcapan {
+  display: flex;
+  flex-direction: column;
+}
+
+#formUcapan label {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #2d6a4f;
+}
+
+#formUcapan input,
+#formUcapan textarea {
+  margin-top: 5px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+#formUcapan button[type="submit"] {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #2d6a4f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#formUcapan button[type="submit"]:hover {
+  background-color: #3c8a66;
+}
+
+/* === Daftar Ucapan === */
+#daftarUcapan {
+  background: #fff;
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: none;
+}
+
+#daftarUcapan h3 {
+  margin-top: 0;
+  color: #2d6a4f;
+  text-align: center;
+}
+
+.ucapan-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.ucapan-item:last-child {
+  border-bottom: none;
+}
+
+.ucapan-nama {
+  font-weight: bold;
+  color: #1b4332;
+}
+
+.ucapan-teks {
+  margin-left: 10px;
+  font-style: italic;
+  color: #555;
+}
+
 
     /* Container info berikan kado */
     #infoKado {
@@ -121,7 +234,7 @@
 </head>
 <body>
 <audio id="backgroundAudio" loop>
-  <source src="Gamon.mp3" type="audio/mpeg" />
+  <source src="Weding.mp3" type="audio/mpeg" />
   Browser Anda tidak mendukung elemen audio.
 </audio>
 <button id="playButton" onclick="playAudio()">Putar Musik</button>
@@ -137,8 +250,8 @@
   <div id="countdown">Menghitung mundur...</div>
   <p>Dengan bahagia kami mengundang Anda ke pernikahan kami</p>
   <img src="gambar4.jpg" alt="Pengantin" style="width:150px;height:150px;border-radius:50%;margin:20px 0;box-shadow:0 4px 10px rgba(0,0,0,0.1);" />
-  <h2>Andi Ramadhan & Sinta Ayu Lestari</h2>
-  <p>Sabtu, 10 Mei 2025 | Gedung Serbaguna Bahagia</p>
+  <h2>Fendi & Ariyani </h2>
+  <p>Minggu, 11 Mei 2025 | rumah mempelai wanita </p>
   <blockquote>
     “Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan-pasangan untukmu.”
     <br /><small>- QS. Ar-Rum: 21</small>
@@ -147,22 +260,32 @@
 
 <div id="acara" class="section" style="background:#f0f9f4;">
   <h1>Detail Acara</h1>
-  <h2>Andi Ramadhan</h2>
-  <p>Putra dari Bapak Suhardi & Ibu Nuraini</p>
-  <h2>Sinta Ayu Lestari</h2>
-  <p>Putri dari Bapak Sutrisno & Ibu Dwi Ratna</p>
+  <h2>Fendi</h2>
+  <p>Putra ketiga dari bpk amin & (almh) ibu Hayani  </p>
+  <h2>Ariyani Tahanina </h2>
+  <p>Putri kedua dari(alm) Bpk joseph kabes & ibu jumina fajar Tahanina </p>
   <hr />
-  <p><strong>Akad Nikah:</strong><br />10 Mei 2025, Pukul 10.00 WIB</p>
-  <p><strong>Resepsi:</strong><br />11.30 WIB - Selesai</p>
-  <p>Lokasi: Gedung Serbaguna Bahagia, Jalan Mawar No. 12, Kota Bahagia</p>
+  <p><strong>Sesi 2 ( perjamuan ):</strong><br />12.00 - 15.00 WIT</p>
+  <p>Lokasi: Bertempat di rumah mempelai wanita 
+Jl.pelopor , puncak (kompleks Telkom lama) </p>
 </div>
 
-<div id="galeri" class="section">
-  <h1>Galeri</h1>
-  <img src="gambar1.jpg" alt="Foto 1" style="width:100%; max-width:400px; margin:10px 0; border-radius:10px;" />
-  <img src="gambar2.jpg" alt="Foto 2" style="width:100%; max-width:400px; margin:10px 0; border-radius:10px;" />
-  <img src="gambar3.jpg" alt="Foto 3" style="width:100%; max-width:400px; margin:10px 0; border-radius:10px;" />
+<div id="galeri" class="section" style="background: linear-gradient(to bottom right, #fff0f5, #fefae0); padding-bottom: 100px;">
+  <h1 style="color: #8d4f73;">Galeri Kenangan</h1>
+  <blockquote>
+    “Sedikit Cerita tentang perjalanan dan pertemuan sampai menikah.”
+    <br /><small>hari Tanggal tahun jadian </small>
+  </blockquote>
+  <div style="overflow-x: auto; white-space: nowrap; padding: 20px; border: 5px solid #e9c5d4; border-radius: 15px; background-image: url('https://i.postimg.cc/yxP8P3H1/bunga-frame.png'); background-size: cover; background-repeat: repeat; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <img src="foto1.jpg" alt="Foto 1" style="width: 300px; height: 400px; object-fit: cover; border-radius: 10px; margin-right: 15px; border: 5px solid #d291bc; display: inline-block;" />
+    <img src="foto2.jpg" alt="Foto 2" style="width: 300px; height: 400px; object-fit: cover; border-radius: 10px; margin-right: 15px; border: 5px solid #d291bc; display: inline-block;" />
+     <img src="foto4.jpg" alt="Foto 24" style="width: 300px; height: 400px; object-fit: cover; border-radius: 10px; margin-right: 15px; border: 5px solid #d291bc; display: inline-block;" />
+    <img src="foto3.jpg" alt="Foto 3" style="width: 300px; height: 400px; object-fit: cover; border-radius: 10px; margin-right: 15px; border: 5px solid #d291bc; display: inline-block;" />
+     <img src="foto5.jpg" alt="Foto 5" style="width: 300px; height: 400px; object-fit: cover; border-radius: 10px; margin-right: 15px; border: 5px solid #d291bc; display: inline-block;" />
+    <!-- Tambahkan lebih banyak foto jika perlu -->
+  </div>
 </div>
+
 
 <div id="rsvp" class="section">
   <h1>Konfirmasi Kehadiran (RSVP)</h1>
@@ -181,7 +304,7 @@
 
 <!-- Tombol dan Daftar Ucapan -->
 <div id="ucapanContainer">
-  <button onclick="toggleUcapan()">Berikan Ucapan</button>
+  <button onclick="toggleUcapan()">Berikan Ucapan & do'a</button>
 </div>
 <div id="daftarUcapan">
   <h3>Daftar Ucapan</h3>
@@ -192,7 +315,7 @@
 <div id="infoKado">
   <h3>Informasi Pemberian Kado</h3>
   <p>Jika ingin memberikan kado, dapat melalui transfer rekening berikut:</p>
-  <p class="rekening">BNI 1234567890 a.n. Andi & Sinta</p>
+  <p class="rekening">BRI 210001016963503 : Ari yani Tahanina </p>
 </div>
 
 <!-- Elemen Trigger untuk Autoplay Musik -->
@@ -204,14 +327,19 @@
     <span class="close-btn" onclick="closeModal()">×</span>
     <h2>Berikan Ucapan</h2>
     <form id="formUcapan" onsubmit="submitUcapan(event)">
-      <label for="namaUcapan">Nama</label>
-      <input type="text" id="namaUcapan" name="namaUcapan" required />
-      <label for="teksUcapan">Ucapan</label>
-      <textarea id="teksUcapan" name="teksUcapan" rows="4" required></textarea>
-      <button type="submit">Kirim Ucapan</button>
+      <div class="form-group">
+        <label for="namaUcapan">Nama</label>
+        <input type="text" id="namaUcapan" name="namaUcapan" required />
+      </div>
+      <div class="form-group">
+        <label for="teksUcapan">Ucapan</label>
+        <textarea id="teksUcapan" name="teksUcapan" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="submit-btn">Kirim Ucapan</button>
     </form>
   </div>
 </div>
+
 
 <script>
   // Musik
@@ -303,33 +431,54 @@
 
   // Simpan ucapan di LocalStorage (bisa ganti dengan database)
   function submitUcapan(e) {
-    e.preventDefault();
-    const nama = document.getElementById('namaUcapan').value.trim();
-    const teks = document.getElementById('teksUcapan').value.trim();
+  e.preventDefault();
+  const nama = document.getElementById('namaUcapan').value.trim();
+  const teks = document.getElementById('teksUcapan').value.trim();
 
-    if(!nama || !teks) {
-      alert('Mohon isi semua data ucapan!');
-      return;
-    }
-
-    const ucapanList = JSON.parse(localStorage.getItem('ucapanList') || '[]');
-    ucapanList.push({nama, teks});
-    localStorage.setItem('ucapanList', JSON.stringify(ucapanList));
-
-    renderUcapan();
-    closeModal();
-    e.target.reset();
+  if (!nama || !teks) {
+    alert('Mohon isi semua data ucapan!');
+    return;
   }
 
-  function renderUcapan() {
-    const listContainer = document.getElementById('listUcapan');
-    const daftarUcapan = document.getElementById('daftarUcapan');
-    const ucapanList = JSON.parse(localStorage.getItem('ucapanList') || '[]');
+  const ucapanList = JSON.parse(localStorage.getItem('ucapanList') || '[]');
+  ucapanList.push({ nama, teks });
+  localStorage.setItem('ucapanList', JSON.stringify(ucapanList));
 
-    if(ucapanList.length === 0) {
-      daftarUcapan.style.display = 'none';
-      return;
-    }
+  renderUcapan();
+  closeModal();
+  e.target.reset();
+}
+
+function renderUcapan() {
+  const listContainer = document.getElementById('listUcapan');
+  const daftarUcapan = document.getElementById('daftarUcapan');
+  const ucapanList = JSON.parse(localStorage.getItem('ucapanList') || '[]');
+
+  if (ucapanList.length === 0) {
+    daftarUcapan.style.display = 'none';
+    listContainer.innerHTML = '';
+    return;
+  }
+
+  daftarUcapan.style.display = 'block';
+  listContainer.innerHTML = '';
+
+  ucapanList.forEach((item) => {
+    const ucapanDiv = document.createElement('div');
+    ucapanDiv.className = 'ucapan-item';
+    ucapanDiv.innerHTML = `
+      <span class="ucapan-nama">${item.nama}</span>:
+      <span class="ucapan-teks">${item.teks}</span>
+    `;
+    listContainer.appendChild(ucapanDiv);
+  });
+}
+
+// Fungsi opsional untuk membersihkan semua ucapan sebelumnya
+function clearUcapanSebelumnya() {
+  localStorage.removeItem('ucapanList');
+  renderUcapan();
+}
 
     daftarUcapan.style.display = 'block';
     listContainer.innerHTML = '';
@@ -339,7 +488,7 @@
       div.innerHTML = `<span class="ucapan-nama">${item.nama}:</span> <span class="ucapan-teks">"${item.teks}"</span>`;
       listContainer.appendChild(div);
     });
-  }
+  
 
   // Render saat load halaman
   renderUcapan();
