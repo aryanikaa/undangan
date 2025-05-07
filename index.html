@@ -237,7 +237,7 @@ input, textarea {
   <source src="Weding.mp3" type="audio/mpeg" />
   Browser Anda tidak mendukung elemen audio.
 </audio>
-<button id="playButton" onclick="playAudio()">Putar Musik</button>
+<button id="playButton" onclick="playAudio()" style="display:block;">Putar Musik</button>
 <nav>
   <a href="#home">Beranda</a>
   <a href="#acara">Acara</a>
@@ -343,47 +343,31 @@ Jl.pelopor , puncak (kompleks Telkom lama) </p>
 
 <script>
   // Musik
-const audio = document.getElementById("backgroundAudio");
-const playBtn = document.getElementById("playButton");  // Tombol play
-const audioTrigger = document.getElementById("audioTrigger");  // Elemen yang memicu autoplay
+ const audio = document.getElementById('backgroundAudio');
+  const playButton = document.getElementById('playButton');
 
-// Tombol play manual
-function playAudio() {
-  audio.play().then(() => {
-    playBtn.style.display = "none";  // Sembunyikan tombol play setelah audio diputar
-  }).catch((e) => {
-    console.log("Autoplay gagal:", e);
-    playBtn.style.display = "block";  // Tampilkan tombol play jika autoplay gagal
-  });
-}
+  function playAudio() {
+    audio.play().then(() => {
+      playButton.style.display = 'none'; // Sembunyikan tombol jika berhasil play
+    }).catch(() => {
+      playButton.style.display = 'block'; // Tampilkan tombol jika gagal (misalnya di iOS Safari)
+    });
+  }
 
-// Update tombol play/pause otomatis saat audio play/pause
-audio.addEventListener('play', () => playBtn.style.display = 'none');
-audio.addEventListener('pause', () => playBtn.style.display = 'inline-block');
-
-// Intersection Observer untuk autoplay saat scroll
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      // Jika audio tidak diputar dan elemen terlihat, coba putar audio
-      if (audio.paused) {
-        audio.play().catch(() => {
-          playBtn.style.display = 'inline-block';  // Tampilkan tombol play jika autoplay gagal
-        });
-      }
-    } else {
-      // Jika audio sedang diputar dan elemen keluar layar, stop audio
-      if (!audio.paused) {
-        audio.pause();
-      }
+  // Coba autoplay setelah interaksi pertama (scroll, tap, atau click)
+  function setupAudioAutoplay() {
+    function tryPlay() {
+      playAudio();
+      document.removeEventListener('click', tryPlay);
+      document.removeEventListener('scroll', tryPlay);
+      document.removeEventListener('touchstart', tryPlay);
     }
-  });
-}, { threshold: 0.5 }); // Menentukan sejauh mana elemen terlihat sebelum dipicu (50%)
+    document.addEventListener('click', tryPlay);
+    document.addEventListener('scroll', tryPlay);
+    document.addEventListener('touchstart', tryPlay);
+  }
 
-observer.observe(audioTrigger);  // Mulai observer pada elemen audioTrigger
-
-// Jika tombol play ditekan secara manual, panggil fungsi playAudio
-playBtn.addEventListener('click', playAudio);
+  document.addEventListener('DOMContentLoaded', setupAudioAutoplay);
 
   // Countdown Timer
   const countdownEl = document.getElementById('countdown');
